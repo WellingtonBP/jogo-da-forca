@@ -10,11 +10,11 @@ public class Tema extends ObjetoDominioImpl {
         this.nome = nome;
     }
 
-    public Tema criar(long id, String nome) {
+    public static Tema criar(long id, String nome) {
         return new Tema(id, nome);
     }
 
-    public Tema reconstituir(long id, String nome) {
+    public static Tema reconstituir(long id, String nome) {
         return new Tema(id, nome);
     }
 

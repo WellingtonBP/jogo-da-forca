@@ -1,7 +1,5 @@
 package br.edu.iff.bancodepalavras.dominio.letra;
 
-import java.util.Objects;
-
 public abstract class Letra {
     private char codigo;
 
@@ -13,18 +11,18 @@ public abstract class Letra {
         return this.codigo;
     }
 
-    public void exibir(Object contexto) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+    public abstract void exibir(Object contexto);
 
     @Override
     public boolean equals(Object o) {
-        return Objects.equals(o, this.codigo);
+        if (!(o instanceof Letra)) return false;
+        Letra outra = (Letra) o;
+        return this.codigo == outra.codigo && this.getClass().equals(outra.getClass());
     }
 
     @Override
     public int hashCode() {
-        return Character.hashCode(this.codigo);
+        return this.codigo + this.getClass().hashCode();
     }
 
     @Override

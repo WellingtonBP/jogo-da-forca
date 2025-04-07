@@ -8,7 +8,7 @@ public class LetraTexto extends Letra {
     }
 
     @Override
-    public void exibir(Object contexto) {
+    public void exibir(Object ignore) {
         System.out.print(this.getCodigo());
     }
 }
