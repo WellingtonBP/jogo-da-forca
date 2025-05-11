@@ -1,35 +1,35 @@
-package br.edu.iff.bancodepalavras.dominio.jogador;
+package br.edu.iff.jogoforca.dominio.jogador;
 
 import br.edu.iff.dominio.ObjetoDominioImpl;
 
-public class Jogador extends ObjetoDominioImpl{
+public class Jogador extends ObjetoDominioImpl {
     private String nome;
     private int pontuacao = 0;
 
-    private Jogador(long id, String nome){
+    private Jogador(long id, String nome) {
         super(id);
         this.nome = nome;
     }
 
-    private Jogador(long id, String nome, int pontuacao){
+    private Jogador(long id, String nome, int pontuacao) {
         super(id);
         this.nome = nome;
         this.pontuacao = pontuacao;
     }
 
-    public Jogador criar(long id, String nome){
+    public Jogador criar(long id, String nome) {
         return new Jogador(id, nome);
     }
 
-    public Jogador reconstruir(long id, String nome, int pontuacao){
+    public Jogador reconstruir(long id, String nome, int pontuacao) {
         return new Jogador(id, nome, pontuacao);
     }
 
-    public String getNome(){
+    public String getNome() {
         return this.nome;
     }
 
-    public void setNome(String nome){
+    public void setNome(String nome) {
         this.nome = nome;
     }
 

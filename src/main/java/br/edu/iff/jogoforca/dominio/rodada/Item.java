@@ -1,10 +1,10 @@
-package br.edu.iff.bancodepalavras.dominio.item;
+package br.edu.iff.jogoforca.dominio.rodada;
 
 import br.edu.iff.bancodepalavras.dominio.letra.Letra;
 import br.edu.iff.bancodepalavras.dominio.palavra.Palavra;
 import br.edu.iff.dominio.ObjetoDominioImpl;
 
-public class Item extends ObjetoDominioImpl{
+public class Item extends ObjetoDominioImpl {
     private Palavra palavra;
     private boolean[] posicoesDescobertas;
     private String palavraArriscada = null;
@@ -21,34 +21,34 @@ public class Item extends ObjetoDominioImpl{
         this.posicoesDescobertas = posicoesDescobertas;
         this.palavraArriscada = palavraArriscada;
     }
-    
-    Item criar(long id, Palavra palavra){
+
+    Item criar(long id, Palavra palavra) {
         boolean[] posicoesDescobertas = new boolean[palavra.getTamanho()];
         return new Item(id, palavra, posicoesDescobertas, null);
     }
 
-    public Item reconstruir(long id, Palavra palavra, boolean[] posicoesDescobertas, String palavraArriscada){
+    public Item reconstruir(long id, Palavra palavra, boolean[] posicoesDescobertas, String palavraArriscada) {
         return new Item(id, palavra, posicoesDescobertas, palavraArriscada);
     }
 
-    public Palavra getPalavra(){
+    public Palavra getPalavra() {
         return this.palavra;
     }
 
-    public Letra[] getLetrasDescobertas(){
+    public Letra[] getLetrasDescobertas() {
         Letra[] letrasDescobertas = new Letra[this.palavra.getTamanho()];
-        for(int i = 0; i < this.palavra.getTamanho(); i++){
-            if(this.posicoesDescobertas[i]){
+        for (int i = 0; i < this.palavra.getTamanho(); i++) {
+            if (this.posicoesDescobertas[i]) {
                 letrasDescobertas[i] = this.palavra.getLetra(i);
             }
         }
         return letrasDescobertas;
     }
 
-    public Letra[] getLetrasEncobertas(){
+    public Letra[] getLetrasEncobertas() {
         Letra[] letrasEncobertas = new Letra[this.palavra.getTamanho()];
-        for(int i = 0; i < this.palavra.getTamanho(); i++){
-            if(!this.posicoesDescobertas[i]){
+        for (int i = 0; i < this.palavra.getTamanho(); i++) {
+            if (!this.posicoesDescobertas[i]) {
                 letrasEncobertas[i] = this.palavra.getLetra(i);
             }
         }

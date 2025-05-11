@@ -1,4 +1,5 @@
-package br.edu.iff.boneco;
+package br.edu.iff.jogoforca.dominio.boneco.imagem;
+
 public class BonecoImagem implements Boneco {
     private static BonecoImagem soleInstance;
     private long id;
@@ -24,16 +25,18 @@ public class BonecoImagem implements Boneco {
     @Override
     public void exibir(Object contexto, int partes) {
         // Exemplo: pode-se implementar a exibição a partir de imagens.
-        if(partes == 0) {
+        if (partes == 0) {
             System.out.println("sem boneco.");
         } else {
-            System.out.println("o boneco está com " + partes );
+            System.out.println("o boneco está com " + partes);
         }
     }
 }
 // Exemplo de uso
 // BonecoImagem boneco = BonecoImagem.getSoleInstance();
 // boneco.exibir(null, 3); // Exibe: "o boneco está com: 3"
-// System.out.println("ID do boneco: " + boneco.getId()); // Exibe: "ID do boneco: 2"
+// System.out.println("ID do boneco: " + boneco.getId()); // Exibe: "ID do
+// boneco: 2"
 // BonecoImagem boneco2 = BonecoImagem.getSoleInstance();
-// System.out.println(boneco == boneco2); // Exibe: "true", pois é a mesma instância
+// System.out.println(boneco == boneco2); // Exibe: "true", pois é a mesma
+// instância
