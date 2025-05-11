@@ -20,23 +20,25 @@ public class Palavra extends ObjetoDominioImpl {
         this.tema = tema;
         this.letras = new Letra[palavra.length() - 1];
         var charArr = palavra.toCharArray();
-        for(int i = 0; i < charArr.length; i++) {
+        for (int i = 0; i < charArr.length; i++) {
             this.letras[i] = Palavra.letraFactory.getLetra(charArr[i]);
         }
         this.palavra = palavra;
     }
 
     public static Palavra criar(long id, String palavra, Tema tema) {
-        if(Palavra.letraFactory == null) {
+        if (Palavra.letraFactory == null) {
             return null;
-        };
+        }
+        ;
         return new Palavra(id, palavra, tema);
     }
 
     public static Palavra reconstituir(long id, String palavra, Tema tema) {
-        if(Palavra.letraFactory == null) {
+        if (Palavra.letraFactory == null) {
             return null;
-        };
+        }
+        ;
         return new Palavra(id, palavra, tema);
     }
 
@@ -49,23 +51,23 @@ public class Palavra extends ObjetoDominioImpl {
     }
 
     public Letra[] getLetras() {
-        return this.letras;
+        return this.letras.clone();
     }
 
     public Letra getLetra(int posicao) {
         return this.letras[posicao];
     }
 
-    public void exibir(Object ignore) {
+    public void exibir(Object contexto) {
         for (Letra l : this.letras) {
-            l.exibir(null);
+            l.exibir(contexto);
         }
     }
 
-    public void exibir(Object ignore, boolean[] posicoes) {
-        for (int i = 0; i < this.letras.length; i ++) {
-            if(posicoes[i]) {
-                this.letras[i].exibir(null);
+    public void exibir(Object contexto, boolean[] posicoes) {
+        for (int i = 0; i < this.letras.length; i++) {
+            if (posicoes[i]) {
+                this.letras[i].exibir(contexto);
             }
         }
     }
@@ -73,8 +75,8 @@ public class Palavra extends ObjetoDominioImpl {
     public int[] tentar(char codigo) {
         List<Integer> pos = new ArrayList<>();
         Letra t = Palavra.letraFactory.getLetra(codigo);
-        for(int i = 0; i < this.letras.length; i++) {
-            if(this.letras[0].equals(t)) {
+        for (int i = 0; i < this.letras.length; i++) {
+            if (this.letras[0].equals(t)) {
                 pos.add(i);
             }
         }

@@ -8,7 +8,7 @@ public class LetraImagem extends Letra {
     }
 
     @Override
-    public void exibir(Object ignore) {
-
+    public void exibir(Object contexto) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }
