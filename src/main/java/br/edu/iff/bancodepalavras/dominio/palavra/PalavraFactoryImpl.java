@@ -25,17 +25,17 @@ public class PalavraFactoryImpl extends EntityFactory implements PalavraFactory 
 
   @Override
   public Palavra getPalavra(String palavra, Tema tema) {
-    var existente = this.palavraRepository.getPalavra(palavra);
-    if (existente != null) {
-      return existente;
-    }
-    var novaPalavra = Palavra.criar(getProximoId(), palavra, tema);
     try {
+      var existente = this.palavraRepository.getPalavra(palavra);
+      if (existente != null) {
+        return existente;
+      }
+      var novaPalavra = Palavra.criar(getProximoId(), palavra, tema);
       this.palavraRepository.inserir(novaPalavra);
+      return novaPalavra;
     } catch (RepositoryException e) {
       return null;
     }
-    return novaPalavra;
   }
 
 }

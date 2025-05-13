@@ -11,7 +11,7 @@ public interface PalavraRepository extends Repository {
 
   public Palavra[] getTodas();
 
-  public Palavra getPalavra(String palavra);
+  public Palavra getPalavra(String palavra) throws RepositoryException;
 
   public void inserir(Palavra palavra) throws RepositoryException;
 
