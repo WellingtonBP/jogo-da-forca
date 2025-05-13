@@ -18,7 +18,7 @@ public class BDRRodadaRepository implements RodadaRepository {
   }
 
   @Override
-  public Rodada getPorJogador(Jogador jogador) {
+  public Rodada[] getPorJogador(Jogador jogador) {
     throw new UnsupportedOperationException("Unimplemented method 'getPorJogador'");
   }
 
