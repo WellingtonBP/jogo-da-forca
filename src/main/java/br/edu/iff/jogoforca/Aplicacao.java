@@ -115,6 +115,7 @@ public class Aplicacao {
 
   public void setTipoRepositoryFactory(String tipo) {
     this.tipoRepositoryFactory = tipo;
+    this.configurar();
   }
 
   public RepositoryFactory getRepositoryFactory() {
@@ -137,6 +138,7 @@ public class Aplicacao {
 
   public void setTipoElementoGraficoFactory(String tipo) {
     this.tipoElementoGraficoFactory = tipo;
+    this.configurar();
   }
 
   public ElementoGraficoFactory getElementoGraficoFactory() {
@@ -187,6 +189,7 @@ public class Aplicacao {
 
   public void setTipoRodadaFactory(String tipo) {
     this.tipoRodadaFactory = tipo;
+    this.configurar();
   }
 
   public RodadaFactory getRodadaFactory() {
