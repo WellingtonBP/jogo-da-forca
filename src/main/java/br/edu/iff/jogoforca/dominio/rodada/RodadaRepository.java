@@ -7,7 +7,7 @@ import br.edu.iff.repository.RepositoryException;
 public interface RodadaRepository extends Repository {
   public Rodada getPorId(long id);
 
-  public Rodada[] getPorJogador(Jogador jogador);
+  public Rodada getPorJogador(Jogador jogador);
 
   public void inserir(Rodada rodada) throws RepositoryException;
 

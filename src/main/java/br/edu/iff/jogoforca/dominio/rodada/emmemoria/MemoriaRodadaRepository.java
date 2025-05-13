@@ -36,10 +36,8 @@ public class MemoriaRodadaRepository implements RodadaRepository {
   }
 
   @Override
-  public Rodada[] getPorJogador(Jogador jogador) {
-    var lista = this.map.values().stream().filter(rodada -> rodada.getJogador().equals(jogador)).toList();
-
-    return lista.toArray(new Rodada[lista.size()]);
+  public Rodada getPorJogador(Jogador jogador) {
+    return this.map.values().stream().filter(rodada -> rodada.getJogador().equals(jogador)).findFirst().orElse(null);
   }
 
   @Override
