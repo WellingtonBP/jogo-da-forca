@@ -1,210 +1,242 @@
 package br.edu.iff.jogoforca.dominio.rodada;
 
-import br.edu.iff.bancodepalavras.dominio.boneco.BonecoFactory;
-import br.edu.iff.bancodepalavras.dominio.boneco.Boneco;
 import br.edu.iff.bancodepalavras.dominio.palavra.Palavra;
-import br.edu.iff.bancodepalavras.dominio.jogador.Jogador;
-import br.edu.iff.bancodepalavras.dominio.ObjetoDominioImpl;
-import br.edu.iff.bancodepalavras.dominio.letra.LetraFactory;
+
 import br.edu.iff.bancodepalavras.dominio.letra.Letra;
 import br.edu.iff.bancodepalavras.dominio.tema.Tema;
+import br.edu.iff.dominio.ObjetoDominioImpl;
+import br.edu.iff.jogoforca.dominio.Boneco;
+import br.edu.iff.jogoforca.dominio.boneco.BonecoFactory;
+import br.edu.iff.jogoforca.dominio.jogador.Jogador;
 
-public class Rodada {
+public class Rodada extends ObjetoDominioImpl {
+    private static int maxPalavras = 3;
+    private static int maxErros = 10;
+    private static int pontosQuandoDescobreTodasAsPalavras = 100;
+    private static int pontosPorLetraEncoberta = 15;
+    private static BonecoFactory bonecoFactory;
 
-    // Atributos essenciais da rodada
-    private long id;
-    private Palavra[] palavras; // Conjunto de palavras sorteadas para a rodada
-    private Jogador jogador; // Jogador que realizará a rodada
+    private Boneco boneco;
+    private Palavra[] palavras;
+    private Jogador jogador;
+    private Item[] items;
+    private Letra[] erradas;
+    private Letra[] certas;
+    private Tema tema;
 
-    // Dependência para criação do boneco (usada no construtor ou outras operações)
-    private BonecoFactory bonecoFactory;
-
-    // Configurações padrão da rodada
-    private int pontosPorLetraEncoberta = 15;
-    private int pontosQuandoDescobreTodasAsPalavras = 100;
-    private int maxErros = 10;
-    private int maxPalavras = 3;
-
-    // Informações adicionais da rodada (atributos de entidade)
-    private int pontuacao = 0;
-    private String nome; // Pode ser utilizado para identificar ou descrever a rodada
-
-    // Construtor: somente aceita palavras e jogador
-    public Rodada(long id, Palavra[] palavras, Jogador jogador) {
-        this.id = id;
+    private Rodada(long id, Palavra[] palavras, Jogador jogador) {
+        super(id);
         this.palavras = palavras;
         this.jogador = jogador;
-        // No construtor, em uma implementação completa, pode-se instanciar itens
-        // utilizando bonecoFactory
+        this.boneco = Rodada.bonecoFactory.getBoneco();
+        this.items = new Item[this.palavras.length];
+        this.tema = this.palavras.length != 0 ? this.palavras[0].getTema() : null;
+        for (int i = 0; i < this.palavras.length; i++) {
+            this.items[i] = Item.criar((long) i, this.palavras[i]);
+        }
     }
 
-    // Métodos estáticos para criação e reconstituição de uma rodada
-
-    /**
-     * Cria uma nova instância de Rodada com os parâmetros fornecidos.
-     */
-    public static Rodada criar(long id, Palavra[] palavras, Jogador jogador) {
-        return new Rodada(id, palavras, jogador);
+    private Rodada(long id, Item[] items, Letra[] erradas, Jogador jogador) {
+        super(id);
+        this.items = items;
+        this.erradas = erradas;
+        this.jogador = jogador;
+        this.boneco = Rodada.bonecoFactory.getBoneco();
     }
 
-    /**
-     * Reconstituí uma rodada a partir dos dados persistidos.
-     */
-    public static Rodada reconstituir(long id, Palavra[] palavras, Jogador jogador) {
-        return new Rodada(id, palavras, jogador);
+    public static BonecoFactory getBonecoFactory() {
+        return Rodada.bonecoFactory;
     }
 
-    // Getters e Setters da dependência BonecoFactory
-
-    public BonecoFactory getBonecoFactory() {
-        return bonecoFactory;
+    public static void setBonecoFactory(BonecoFactory bonecoFactory) {
+        Rodada.bonecoFactory = bonecoFactory;
     }
 
-    public void setBonecoFactory(BonecoFactory bonecoFactory) {
-        this.bonecoFactory = bonecoFactory;
+    public static int getMaxPalavras() {
+        return Rodada.maxPalavras;
     }
 
-    // Getters e Setters para os parâmetros de pontuação e limites da rodada
-
-    public void setPontosPorLetraEncoberta(int pontos) {
-        this.pontosPorLetraEncoberta = pontos;
-    }
-
-    public int getPontosPorLetraEncoberta() {
-        return pontosPorLetraEncoberta;
-    }
-
-    public void setPontosQuandoDescobreTodasAsPalavras(int pontos) {
-        this.pontosQuandoDescobreTodasAsPalavras = pontos;
-    }
-
-    public int getPontosQuandoDescobreTodasAsPalavras() {
-        return pontosQuandoDescobreTodasAsPalavras;
-    }
-
-    public void setMaxErros(int max) {
-        this.maxErros = max;
-    }
-
-    public int getMaxErros() {
+    public static int getMaxErros() {
         return maxErros;
     }
 
-    public void setMaxPalavras(int max) {
-        this.maxPalavras = max;
+    public static void setMaxErros(int max) {
+        Rodada.maxErros = max;
     }
 
-    public int getMaxPalavras() {
-        return maxPalavras;
+    public static void setMaxPalavras(int max) {
+        Rodada.maxPalavras = max;
     }
 
-    // Métodos de entidade (conforme o modelo de domínio)
-
-    /**
-     * Atualiza a pontuação da rodada, somando os pontos informados.
-     * Em uma implementação completa, é possível atualizar também a pontuação total
-     * do Jogador.
-     *
-     * @param pontos pontos a serem adicionados à pontuação atual da rodada.
-     */
-    public void atualizarPontuacao(int pontos) {
-        this.pontuacao += pontos;
-        // Exemplo opcional: atualizar a pontuação do jogador
-        // if (jogador != null) {
-        // jogador.atualizarPontuacao(pontos);
-        // }
+    public static int getPontosQuandoDescobreTodasAsPalavras() {
+        return Rodada.pontosQuandoDescobreTodasAsPalavras;
     }
 
-    /**
-     * Retorna a pontuação atual da rodada.
-     *
-     * @return a pontuação acumulada nesta rodada.
-     */
-    public int getPontuacao() {
-        return pontuacao;
+    public static void setPontosQuandoDescobreTodasAsPalavras(int pontos) {
+        Rodada.pontosQuandoDescobreTodasAsPalavras = pontos;
     }
 
-    /**
-     * Define o nome ou título da rodada.
-     *
-     * @param nome nome da rodada.
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
+    public static int getPontosPorLetraEncoberta() {
+        return Rodada.pontosPorLetraEncoberta;
     }
 
-    /**
-     * Retorna o nome ou título da rodada.
-     *
-     * @return o nome da rodada.
-     */
-    public String getNome() {
-        return nome;
+    public static void setPontosPorLetraEncoberta(int pontos) {
+        Rodada.pontosPorLetraEncoberta = pontos;
     }
 
-    // Getters para atributos adicionais (id, palavras e jogador) se necessário
-
-    public long getId() {
-        return id;
+    public static Rodada criar(long id, Palavra[] palavras, Jogador jogador) {
+        if (Rodada.bonecoFactory != null) {
+            return new Rodada(id, palavras, jogador);
+        }
+        return null;
     }
 
-    public Palavra[] getPalavras() {
-        return palavras;
+    public static Rodada reconstituir(long id, Item[] items, Letra[] erradas, Jogador jogador) {
+        if (Rodada.bonecoFactory != null) {
+            return new Rodada(id, items, erradas, jogador);
+        }
+        return null;
     }
 
     public Jogador getJogador() {
         return jogador;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Rodada [id=").append(id)
-                .append(", nome=").append(nome)
-                .append(", pontuacao=").append(pontuacao)
-                .append(", jogador=").append(jogador)
-                .append("]");
-        return sb.toString();
+    public Tema getTema() {
+        return this.tema;
+    }
+
+    public Palavra[] getPalavras() {
+        return palavras;
+    }
+
+    public int getNumPalavras() {
+        return palavras.length;
+    }
+
+    public void tentar(char codigo) {
+        var item = items[this.palavras.length - 1];
+
+        if (!item.tentar(codigo)) {
+            int letraErradaPos = 0;
+            if (this.erradas == null) {
+                this.erradas = new Letra[1];
+            } else {
+                Letra[] novo = new Letra[this.erradas.length];
+                letraErradaPos = this.erradas.length;
+                System.arraycopy(this.erradas, 0, novo, 0, this.erradas.length);
+                this.erradas = novo;
+            }
+            this.erradas[letraErradaPos] = Palavra.getLetraFactory().getLetra(codigo);
+        } else {
+            int letraCertaPos = 0;
+            if (this.certas == null) {
+                this.certas = new Letra[1];
+            } else {
+                Letra[] novo = new Letra[this.certas.length];
+                letraCertaPos = this.certas.length;
+                System.arraycopy(this.certas, 0, novo, 0, this.certas.length);
+                this.certas = novo;
+            }
+            this.certas[letraCertaPos] = Palavra.getLetraFactory().getLetra(codigo);
+        }
+    }
+
+    public void arriscar(String[] palavras) {
+        for (int i = 0; i < this.items.length; i++) {
+            this.items[i].arriscar(palavras[i]);
+        }
+    }
+
+    public void exibirItens(Object contexto) {
+        for (var item : this.items) {
+            item.exibir(contexto);
+        }
+    }
+
+    public void exibirBoneco(Object contexto) {
+        this.boneco.exibir(contexto, this.erradas != null ? this.erradas.length : 0);
+    }
+
+    public void exibirPalavras(Object contexto) {
+        for (var palavra : this.palavras) {
+            palavra.exibir(contexto);
+        }
+    }
+
+    public void exibirLetrasErradas(Object contexto) {
+        for (var letraErrada : this.erradas) {
+            letraErrada.exibir(contexto);
+        }
+    }
+
+    public Letra[] getTentativas() {
+        Letra[] tentativas = new Letra[this.getQtdeTentativas()];
+
+        System.arraycopy(this.certas, 0, tentativas, 0, this.certas.length);
+        System.arraycopy(this.erradas, 0, tentativas, this.certas.length, this.erradas.length);
+
+        return tentativas;
+    }
+
+    public Letra[] getCertas() {
+        return this.getCertas().clone();
+    }
+
+    public Letra[] getErradas() {
+        return this.getErradas().clone();
+    }
+
+    public int calcularPontos() {
+        int pontos = 0;
+        if (this.descobriu()) {
+            pontos += 100;
+            for (var item : items) {
+                pontos += item.getLetrasEncobertas().length * Rodada.pontosPorLetraEncoberta;
+            }
+        }
+        return pontos;
+    }
+
+    public boolean encerrou() {
+        return this.arriscou() || this.descobriu() || this.erradas.length == Rodada.maxErros;
+    }
+
+    public boolean descobriu() {
+        boolean descobriu = true;
+        for (var item : this.items) {
+            descobriu = descobriu && item.descobriu();
+        }
+        return descobriu;
+    }
+
+    public boolean arriscou() {
+        boolean arriscou = false;
+        for (var item : this.items) {
+            arriscou = arriscou || item.arriscou();
+        }
+        return arriscou;
+    }
+
+    public int getQtdeTentativasRestantes() {
+        return Rodada.maxErros - this.erradas.length;
+    }
+
+    public int getQtdeErros() {
+        return this.erradas.length;
+    }
+
+    public int getQtdeAcertos() {
+        int qtd = 0;
+        for (var item : items) {
+            if (item.acertou()) {
+                qtd++;
+            }
+        }
+        return qtd;
+    }
+
+    public int getQtdeTentativas() {
+        return this.erradas.length + this.certas.length;
     }
 }
-
-// Exemplo de uso
-// Palavra palavra1 = Palavra.criar(1, "cachorro", Tema.ANIMAIS);
-// Palavra palavra2 = Palavra.criar(2, "gato", Tema.ANIMAIS);
-// Palavra[] palavras = {palavra1, palavra2};
-// Jogador jogador = new Jogador(1, "Jogador 1");
-// Rodada rodada = Rodada.criar(1, palavras, jogador);
-// rodada.setNome("Rodada 1");
-// rodada.setPontosPorLetraEncoberta(10);
-// rodada.setPontosQuandoDescobreTodasAsPalavras(50);
-// rodada.setMaxErros(5);
-// rodada.setMaxPalavras(2);
-// rodada.atualizarPontuacao(20);
-// System.out.println(rodada); // Exibe: Rodada [id=1, nome=Rodada 1,
-// pontuacao=20, jogador=Jogador 1]
-// System.out.println("Pontuação atual: " + rodada.getPontuacao()); // Exibe:
-// Pontuação atual: 20
-// System.out.println("Palavras na rodada: ");
-// for (Palavra p : palavras) {
-// System.out.println(p); // Exibe: Palavra [id=1, palavra=cachorro,
-// tema=ANIMAIS]
-// System.out.println(p); // Exibe: Palavra [id=2, palavra=gato, tema=ANIMAIS]
-// }
-// System.out.println("Jogador: " + jogador); // Exibe: Jogador [id=1,
-// nome=Jogador 1]
-// System.out.println("ID do jogador: " + jogador.getId()); // Exibe: ID do
-// jogador: 1
-// System.out.println("Nome do jogador: " + jogador.getNome()); // Exibe: Nome
-// do jogador: Jogador 1
-// System.out.println("ID da rodada: " + rodada.getId()); // Exibe: ID da
-// rodada: 1
-// System.out.println("Nome da rodada: " + rodada.getNome()); // Exibe: Nome da
-// rodada: Rodada 1
-// System.out.println("Pontuação da rodada: " + rodada.getPontuacao()); //
-// Exibe: Pontuação da rodada: 20
-// System.out.println("Palavras na rodada: ");
-// for (Palavra p : palavras) {
-// System.out.println(p); // Exibe: Palavra [id=1, palavra=cachorro,
-// tema=ANIMAIS]
-// System.out.println(p); // Exibe: Palavra [id=2, palavra=gato, tema=ANIMAIS]
-// }
