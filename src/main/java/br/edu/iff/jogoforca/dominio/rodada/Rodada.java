@@ -115,6 +115,8 @@ public class Rodada extends ObjetoDominioImpl {
     }
 
     public void tentar(char codigo) {
+        if (this.encerrou())
+            return;
         var item = items[this.palavras.length - 1];
 
         if (!item.tentar(codigo)) {
@@ -143,6 +145,8 @@ public class Rodada extends ObjetoDominioImpl {
     }
 
     public void arriscar(String[] palavras) {
+        if (this.encerrou())
+            return;
         for (int i = 0; i < this.items.length; i++) {
             this.items[i].arriscar(palavras[i]);
         }
