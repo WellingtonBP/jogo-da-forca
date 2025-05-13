@@ -18,7 +18,7 @@ public class Palavra extends ObjetoDominioImpl {
     private Palavra(long id, String palavra, Tema tema) {
         super(id);
         this.tema = tema;
-        this.letras = new Letra[palavra.length() - 1];
+        this.letras = new Letra[palavra.length()];
         var charArr = palavra.toCharArray();
         for (int i = 0; i < charArr.length; i++) {
             this.letras[i] = Palavra.letraFactory.getLetra(charArr[i]);
