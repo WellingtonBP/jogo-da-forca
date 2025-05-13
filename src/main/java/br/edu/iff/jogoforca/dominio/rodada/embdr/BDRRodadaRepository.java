@@ -6,6 +6,17 @@ import br.edu.iff.jogoforca.dominio.rodada.RodadaRepository;
 import br.edu.iff.repository.RepositoryException;
 
 public class BDRRodadaRepository implements RodadaRepository {
+  private static BDRRodadaRepository soleInstance;
+
+  private BDRRodadaRepository() {
+  };
+
+  public static BDRRodadaRepository getSoleInstance() {
+    if (BDRRodadaRepository.soleInstance == null) {
+      BDRRodadaRepository.soleInstance = new BDRRodadaRepository();
+    }
+    return BDRRodadaRepository.soleInstance;
+  }
 
   @Override
   public long getProximoId() {

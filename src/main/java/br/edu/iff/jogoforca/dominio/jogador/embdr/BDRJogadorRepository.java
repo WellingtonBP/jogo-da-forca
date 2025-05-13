@@ -4,6 +4,17 @@ import br.edu.iff.jogoforca.dominio.jogador.Jogador;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorRepository;
 
 public class BDRJogadorRepository implements JogadorRepository {
+  private static BDRJogadorRepository soleInstance;
+
+  private BDRJogadorRepository() {
+  };
+
+  public static BDRJogadorRepository getSoleInstance() {
+    if (BDRJogadorRepository.soleInstance == null) {
+      BDRJogadorRepository.soleInstance = new BDRJogadorRepository();
+    }
+    return BDRJogadorRepository.soleInstance;
+  }
 
   @Override
   public long getProximoId() {

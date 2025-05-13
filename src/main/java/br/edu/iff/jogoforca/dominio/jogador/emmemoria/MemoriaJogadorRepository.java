@@ -15,7 +15,7 @@ public class MemoriaJogadorRepository implements JogadorRepository {
     this.map = new HashMap<>();
   };
 
-  public MemoriaJogadorRepository getSoleInstance() {
+  public static MemoriaJogadorRepository getSoleInstance() {
     if (MemoriaJogadorRepository.soleInstance == null) {
       MemoriaJogadorRepository.soleInstance = new MemoriaJogadorRepository();
     }

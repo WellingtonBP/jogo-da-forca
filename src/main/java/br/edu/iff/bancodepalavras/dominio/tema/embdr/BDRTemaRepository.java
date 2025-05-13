@@ -5,6 +5,17 @@ import br.edu.iff.bancodepalavras.dominio.tema.TemaRepository;
 import br.edu.iff.repository.RepositoryException;
 
 public class BDRTemaRepository implements TemaRepository {
+  private static BDRTemaRepository soleInstance;
+
+  private BDRTemaRepository() {
+  };
+
+  public static BDRTemaRepository getSoleInstance() {
+    if (BDRTemaRepository.soleInstance == null) {
+      BDRTemaRepository.soleInstance = new BDRTemaRepository();
+    }
+    return BDRTemaRepository.soleInstance;
+  }
 
   @Override
   public long getProximoId() {

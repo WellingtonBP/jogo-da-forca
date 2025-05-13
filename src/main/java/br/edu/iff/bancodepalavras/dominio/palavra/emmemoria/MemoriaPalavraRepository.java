@@ -19,7 +19,7 @@ public class MemoriaPalavraRepository implements PalavraRepository {
     this.map = new HashMap<>();
   }
 
-  public MemoriaPalavraRepository getSoleInstance() {
+  public static MemoriaPalavraRepository getSoleInstance() {
     if (MemoriaPalavraRepository.soleInstance == null) {
       MemoriaPalavraRepository.soleInstance = new MemoriaPalavraRepository();
     }

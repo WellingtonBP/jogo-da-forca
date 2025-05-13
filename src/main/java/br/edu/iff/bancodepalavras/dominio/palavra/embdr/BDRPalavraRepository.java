@@ -6,6 +6,17 @@ import br.edu.iff.bancodepalavras.dominio.tema.Tema;
 import br.edu.iff.repository.RepositoryException;
 
 public class BDRPalavraRepository implements PalavraRepository {
+  private static BDRPalavraRepository soleInstance;
+
+  private BDRPalavraRepository() {
+  };
+
+  public static BDRPalavraRepository getSoleInstance() {
+    if (BDRPalavraRepository.soleInstance == null) {
+      BDRPalavraRepository.soleInstance = new BDRPalavraRepository();
+    }
+    return BDRPalavraRepository.soleInstance;
+  }
 
   @Override
   public long getProximoId() {

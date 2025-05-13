@@ -17,7 +17,7 @@ public class MemoriaRodadaRepository implements RodadaRepository {
     this.map = new HashMap<>();
   }
 
-  public MemoriaRodadaRepository getSoleInstance() {
+  public static MemoriaRodadaRepository getSoleInstance() {
     if (MemoriaRodadaRepository.soleInstance == null) {
       MemoriaRodadaRepository.soleInstance = new MemoriaRodadaRepository();
     }

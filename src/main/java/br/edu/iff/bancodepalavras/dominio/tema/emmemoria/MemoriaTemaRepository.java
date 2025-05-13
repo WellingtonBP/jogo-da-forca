@@ -16,7 +16,7 @@ public class MemoriaTemaRepository implements TemaRepository {
     this.map = new HashMap<>();
   };
 
-  public MemoriaTemaRepository getSoleInstance() {
+  public static MemoriaTemaRepository getSoleInstance() {
     if (MemoriaTemaRepository.soleInstance == null) {
       MemoriaTemaRepository.soleInstance = new MemoriaTemaRepository();
     }
