@@ -31,6 +31,7 @@ public class PalavraFactoryImpl extends EntityFactory implements PalavraFactory 
         return existente;
       }
       var novaPalavra = Palavra.criar(getProximoId(), palavra, tema);
+      this.palavraRepository.inserir(novaPalavra);
       return novaPalavra;
     } catch (RepositoryException e) {
       return null;

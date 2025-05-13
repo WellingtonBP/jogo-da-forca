@@ -40,7 +40,7 @@ public class PalavraAppService {
       if (novaPalavra == null) {
         return false;
       }
-      this.palavraRepository.inserir(novaPalavra);
+      this.palavraRepository.atualizar(novaPalavra);
       return true;
     } catch (RepositoryException e) {
       return false;
