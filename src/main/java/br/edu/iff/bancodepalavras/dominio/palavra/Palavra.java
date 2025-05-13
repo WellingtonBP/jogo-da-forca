@@ -14,14 +14,17 @@ public class Palavra extends ObjetoDominioImpl {
     private static LetraFactory letraFactory;
     private Letra[] letras;
     private String palavra;
+    private Letra[] descobertas;
 
     private Palavra(long id, String palavra, Tema tema) {
         super(id);
         this.tema = tema;
         this.letras = new Letra[palavra.length()];
+        this.descobertas = new Letra[palavra.length()];
         var charArr = palavra.toCharArray();
         for (int i = 0; i < charArr.length; i++) {
-            this.letras[i] = Palavra.letraFactory.getLetra(charArr[i]);
+            this.letras[i] = Palavra.letraFactory.getLetraEncoberta();
+            this.descobertas[i] = Palavra.letraFactory.getLetra(charArr[i]);
         }
         this.palavra = palavra;
     }
@@ -76,7 +79,8 @@ public class Palavra extends ObjetoDominioImpl {
         List<Integer> pos = new ArrayList<>();
         Letra t = Palavra.letraFactory.getLetra(codigo);
         for (int i = 0; i < this.letras.length; i++) {
-            if (this.letras[0].equals(t)) {
+            if (this.descobertas[i].equals(t)) {
+                this.letras[i] = this.descobertas[i];
                 pos.add(i);
             }
         }
