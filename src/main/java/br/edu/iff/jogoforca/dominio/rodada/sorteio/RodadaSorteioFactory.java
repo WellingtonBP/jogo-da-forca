@@ -1,7 +1,10 @@
 package br.edu.iff.jogoforca.dominio.rodada.sorteio;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import br.edu.iff.bancodepalavras.dominio.palavra.Palavra;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraRepository;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaRepository;
 import br.edu.iff.jogoforca.dominio.jogador.Jogador;
@@ -40,8 +43,27 @@ public class RodadaSorteioFactory extends RodadaFactoryImpl implements RodadaFac
       if (temas.length != 0) {
         var randomIndexTema = ThreadLocalRandom.current().nextInt(temas.length);
         var sortedTema = temas[randomIndexTema];
-        var palavras = this.getPalavraRepository().getPorTema(sortedTema);
-        var rodada = Rodada.criar(getProximoId(), palavras, jogador);
+        var palavrasTema = this.getPalavraRepository().getPorTema(sortedTema);
+
+        var qtdPalavras = ThreadLocalRandom.current().nextInt(Rodada.getMaxPalavras());
+        if (qtdPalavras == 0) {
+          qtdPalavras++;
+        }
+        if (palavrasTema.length > qtdPalavras) {
+          Set<Integer> sortedPalavras = new HashSet<>();
+          var palavrasSorteadas = new Palavra[qtdPalavras];
+          int j = 0;
+          for (int i = 0; i < qtdPalavras; i++) {
+            Integer sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
+            while (sortedPalavras.contains(sorted)) {
+              sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
+            }
+            palavrasSorteadas[j] = palavrasTema[sorted];
+            j++;
+          }
+          palavrasTema = palavrasSorteadas;
+        }
+        var rodada = Rodada.criar(getProximoId(), palavrasTema, jogador);
         this.getRodadaRepository().inserir(rodada);
         return rodada;
       }

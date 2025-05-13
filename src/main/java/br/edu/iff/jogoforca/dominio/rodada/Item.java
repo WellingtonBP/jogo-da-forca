@@ -59,7 +59,13 @@ public class Item extends ObjetoDominioImpl {
     }
 
     public int qtdeLetrasEncobertas() {
-        return this.palavra.getTamanho() - this.posicoesDescobertas.length;
+        int descobertas = 0;
+        for (int i = 0; i < this.posicoesDescobertas.length; i++) {
+            if (this.posicoesDescobertas[i]) {
+                descobertas++;
+            }
+        }
+        return this.palavra.getTamanho() - descobertas;
     }
 
     public int calcularPontosLetrasEncobertas(int valorPorLetraEncoberta) {
@@ -76,11 +82,20 @@ public class Item extends ObjetoDominioImpl {
 
     boolean tentar(char codigo) {
         var pos = this.palavra.tentar(codigo);
-        return pos.length != 0;
+        boolean achou = pos.length != 0;
+        for (int i : pos) {
+            this.posicoesDescobertas[i] = true;
+        }
+        return achou;
     }
 
     void arriscar(String palavra) {
         this.palavraArriscada = palavra;
+        if (!this.palavra.comparar(palavra)) {
+            for (int i = 0; i < palavra.toCharArray().length; i++) {
+                this.tentar(palavra.charAt(i));
+            }
+        }
     }
 
     public String getPalavraArriscada() {

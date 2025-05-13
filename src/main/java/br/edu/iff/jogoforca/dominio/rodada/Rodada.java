@@ -117,9 +117,26 @@ public class Rodada extends ObjetoDominioImpl {
     public void tentar(char codigo) {
         if (this.encerrou())
             return;
-        var item = items[this.palavras.length - 1];
 
-        if (!item.tentar(codigo)) {
+        boolean achou = false;
+        for (var item : this.items) {
+            if (item.tentar(codigo)) {
+                achou = true;
+            }
+        }
+
+        if (achou) {
+            int letraCertaPos = 0;
+            if (this.certas == null) {
+                this.certas = new Letra[1];
+            } else {
+                Letra[] novo = new Letra[this.certas.length + 1];
+                letraCertaPos = this.certas.length;
+                System.arraycopy(this.certas, 0, novo, 0, this.certas.length);
+                this.certas = novo;
+            }
+            this.certas[letraCertaPos] = Palavra.getLetraFactory().getLetra(codigo);
+        } else {
             int letraErradaPos = 0;
             if (this.erradas == null) {
                 this.erradas = new Letra[1];
@@ -130,17 +147,6 @@ public class Rodada extends ObjetoDominioImpl {
                 this.erradas = novo;
             }
             this.erradas[letraErradaPos] = Palavra.getLetraFactory().getLetra(codigo);
-        } else {
-            int letraCertaPos = 0;
-            if (this.certas == null) {
-                this.certas = new Letra[1];
-            } else {
-                Letra[] novo = new Letra[this.certas.length];
-                letraCertaPos = this.certas.length;
-                System.arraycopy(this.certas, 0, novo, 0, this.certas.length);
-                this.certas = novo;
-            }
-            this.certas[letraCertaPos] = Palavra.getLetraFactory().getLetra(codigo);
         }
     }
 
@@ -155,6 +161,7 @@ public class Rodada extends ObjetoDominioImpl {
     public void exibirItens(Object contexto) {
         for (var item : this.items) {
             item.exibir(contexto);
+            System.out.println();
         }
     }
 
@@ -177,18 +184,33 @@ public class Rodada extends ObjetoDominioImpl {
     public Letra[] getTentativas() {
         Letra[] tentativas = new Letra[this.getQtdeTentativas()];
 
-        System.arraycopy(this.certas, 0, tentativas, 0, this.certas.length);
-        System.arraycopy(this.erradas, 0, tentativas, this.certas.length, this.erradas.length);
+        var certas = new Letra[] {};
+        if (this.certas != null) {
+            certas = this.certas;
+        }
+
+        var erradas = new Letra[] {};
+        if (this.erradas != null) {
+            erradas = this.erradas;
+        }
+        System.arraycopy(certas, 0, tentativas, 0, certas.length);
+        System.arraycopy(erradas, 0, tentativas, certas.length, erradas.length);
 
         return tentativas;
     }
 
     public Letra[] getCertas() {
-        return this.getCertas().clone();
+        if (this.certas != null) {
+            return this.certas.clone();
+        }
+        return new Letra[] {};
     }
 
     public Letra[] getErradas() {
-        return this.getErradas().clone();
+        if (this.erradas != null) {
+            return this.erradas.clone();
+        }
+        return new Letra[] {};
     }
 
     public int calcularPontos() {
@@ -196,20 +218,20 @@ public class Rodada extends ObjetoDominioImpl {
         if (this.descobriu()) {
             pontos += 100;
             for (var item : items) {
-                pontos += item.getLetrasEncobertas().length * Rodada.pontosPorLetraEncoberta;
+                pontos += item.calcularPontosLetrasEncobertas(Rodada.pontosPorLetraEncoberta);
             }
         }
         return pontos;
     }
 
     public boolean encerrou() {
-        return this.arriscou() || this.descobriu() || this.erradas.length == Rodada.maxErros;
+        return this.arriscou() || this.descobriu() || (this.erradas != null && this.erradas.length == Rodada.maxErros);
     }
 
     public boolean descobriu() {
         boolean descobriu = true;
         for (var item : this.items) {
-            descobriu = descobriu && item.descobriu();
+            descobriu = descobriu && (item.acertou() || item.descobriu());
         }
         return descobriu;
     }
@@ -241,6 +263,6 @@ public class Rodada extends ObjetoDominioImpl {
     }
 
     public int getQtdeTentativas() {
-        return this.erradas.length + this.certas.length;
+        return (this.erradas != null ? this.erradas.length : 0) + (this.certas != null ? this.certas.length : 0);
     }
 }

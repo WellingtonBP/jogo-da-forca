@@ -52,21 +52,59 @@ public class Main {
                 rodada.exibirItens(op2);
                 break;
 
+              case "Exibir pontos":
+                System.out.println("Pontos: " + rodada.calcularPontos());
+                break;
+
               case "Exibir boneco":
                 rodada.exibirBoneco(null);
                 break;
 
               case "Tentar":
+                if (rodada.descobriu()) {
+                  System.out.println("Você já descobriu! ");
+                  break;
+                }
                 System.out.println("Digite o caracter: ");
                 String tentativa = input.nextLine();
                 rodada.tentar(tentativa.charAt(0));
                 break;
 
               case "Arriscar":
-                System.out.println("Digite a palavra: ");
-                String arriscada = input.nextLine();
+                if (rodada.descobriu()) {
+                  System.out.println("Você já descobriu! ");
+                  break;
+                }
+                String[] palavras = new String[rodada.getNumPalavras()];
+                for (int i = 0; i < rodada.getNumPalavras(); i++) {
+                  System.out.println("Digite a " + (i + 1) + " palavra : ");
+                  palavras[i] = input.nextLine();
+                }
+                rodada.arriscar(palavras);
+                if (rodada.descobriu()) {
+                  System.out.println("Parabéns, vc acertou a palavra!");
+                }
+                break;
 
-                rodada.arriscar(new String[] { arriscada });
+              case "Tentativas":
+                for (var letra : rodada.getTentativas()) {
+                  letra.exibir(null);
+                  System.out.println();
+                }
+                break;
+
+              case "Certas":
+                for (var letra : rodada.getCertas()) {
+                  letra.exibir(null);
+                  System.out.println();
+                }
+                break;
+
+              case "Erradas":
+                for (var letra : rodada.getErradas()) {
+                  letra.exibir(null);
+                  System.out.println();
+                }
                 break;
 
               case "Finalizar":
@@ -92,6 +130,9 @@ public class Main {
     stringBuilder.append("Exibir boneco\n");
     stringBuilder.append("Tentar\n");
     stringBuilder.append("Arriscar\n");
+    stringBuilder.append("Tentativas\n");
+    stringBuilder.append("Certas\n");
+    stringBuilder.append("Erradas\n");
     stringBuilder.append("Finalizar\n");
     return stringBuilder.toString();
   }
