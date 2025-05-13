@@ -22,12 +22,11 @@ public class Item extends ObjetoDominioImpl {
         this.palavraArriscada = palavraArriscada;
     }
 
-    Item criar(long id, Palavra palavra) {
-        boolean[] posicoesDescobertas = new boolean[palavra.getTamanho()];
-        return new Item(id, palavra, posicoesDescobertas, null);
+    static Item criar(long id, Palavra palavra) {
+        return new Item(id, palavra);
     }
 
-    public Item reconstruir(long id, Palavra palavra, boolean[] posicoesDescobertas, String palavraArriscada) {
+    public static Item reconstruir(long id, Palavra palavra, boolean[] posicoesDescobertas, String palavraArriscada) {
         return new Item(id, palavra, posicoesDescobertas, palavraArriscada);
     }
 
@@ -36,23 +35,63 @@ public class Item extends ObjetoDominioImpl {
     }
 
     public Letra[] getLetrasDescobertas() {
-        Letra[] letrasDescobertas = new Letra[this.palavra.getTamanho()];
+        Letra[] letrasDescobertas = new Letra[this.posicoesDescobertas.length];
+        int j = 0;
         for (int i = 0; i < this.palavra.getTamanho(); i++) {
             if (this.posicoesDescobertas[i]) {
-                letrasDescobertas[i] = this.palavra.getLetra(i);
+                letrasDescobertas[j] = this.palavra.getLetra(i);
+                j++;
             }
         }
         return letrasDescobertas;
     }
 
     public Letra[] getLetrasEncobertas() {
-        Letra[] letrasEncobertas = new Letra[this.palavra.getTamanho()];
+        Letra[] letrasEncobertas = new Letra[this.qtdeLetrasEncobertas()];
+        int j = 0;
         for (int i = 0; i < this.palavra.getTamanho(); i++) {
             if (!this.posicoesDescobertas[i]) {
-                letrasEncobertas[i] = this.palavra.getLetra(i);
+                letrasEncobertas[j] = this.palavra.getLetra(i);
+                j++;
             }
         }
         return letrasEncobertas;
     }
 
+    public int qtdeLetrasEncobertas() {
+        return this.palavra.getTamanho() - this.posicoesDescobertas.length;
+    }
+
+    public int calcularPontosLetrasEncobertas(int valorPorLetraEncoberta) {
+        return valorPorLetraEncoberta * this.qtdeLetrasEncobertas();
+    }
+
+    public boolean descobriu() {
+        return this.qtdeLetrasEncobertas() == 0;
+    }
+
+    public void exibir(Object contexto) {
+        this.palavra.exibir(contexto);
+    }
+
+    boolean tentar(char codigo) {
+        var pos = this.palavra.tentar(codigo);
+        return pos.length != 0;
+    }
+
+    void arriscar(String palavra) {
+        this.palavraArriscada = palavra;
+    }
+
+    public String getPalavraArriscada() {
+        return this.palavraArriscada;
+    }
+
+    public boolean arriscou() {
+        return this.palavraArriscada != null;
+    }
+
+    public boolean acertou() {
+        return this.palavra.comparar(this.palavraArriscada);
+    }
 }
