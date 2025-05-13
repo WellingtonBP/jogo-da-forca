@@ -1,6 +1,6 @@
 package br.edu.iff.jogoforca.dominio.boneco.texto;
 
-import br.edu.iff.jogoforca.dominio.Boneco;
+import br.edu.iff.jogoforca.dominio.boneco.Boneco;
 
 public class BonecoTexto implements Boneco {
     private static BonecoTexto soleInstance;
