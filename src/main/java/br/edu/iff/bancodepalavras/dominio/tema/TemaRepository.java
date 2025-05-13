@@ -6,7 +6,7 @@ import br.edu.iff.repository.RepositoryException;
 public interface TemaRepository extends Repository {
   public Tema getPorId(long id);
 
-  public Tema[] getPorNome(String nome);
+  public Tema getPorNome(String nome);
 
   public Tema[] getTodos();
 

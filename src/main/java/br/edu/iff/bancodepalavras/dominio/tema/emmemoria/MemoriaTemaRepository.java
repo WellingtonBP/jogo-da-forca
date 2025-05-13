@@ -35,9 +35,8 @@ public class MemoriaTemaRepository implements TemaRepository {
   }
 
   @Override
-  public Tema[] getPorNome(String nome) {
-    var list = map.values().stream().filter(tema -> tema.getNome().equals(nome)).toList();
-    return list.toArray(new Tema[list.size()]);
+  public Tema getPorNome(String nome) {
+    return map.values().stream().filter(tema -> tema.getNome().equals(nome)).findFirst().orElse(null);
   }
 
   @Override

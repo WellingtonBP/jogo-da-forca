@@ -28,7 +28,7 @@ public class BDRTemaRepository implements TemaRepository {
   }
 
   @Override
-  public Tema[] getPorNome(String nome) {
+  public Tema getPorNome(String nome) {
     throw new UnsupportedOperationException("Unimplemented method 'getPorNome'");
   }
 
