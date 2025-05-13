@@ -26,7 +26,7 @@ public class MemoriaTemaRepository implements TemaRepository {
 
   @Override
   public long getProximoId() {
-    return ++sequence;
+    return sequence + 1;
   }
 
   @Override
