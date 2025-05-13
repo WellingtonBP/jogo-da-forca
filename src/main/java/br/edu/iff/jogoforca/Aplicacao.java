@@ -8,21 +8,15 @@ import br.edu.iff.bancodepalavras.dominio.palavra.PalavraAppService;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraFactory;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraFactoryImpl;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraRepository;
-import br.edu.iff.bancodepalavras.dominio.palavra.embdr.BDRPalavraRepository;
-import br.edu.iff.bancodepalavras.dominio.palavra.emmemoria.MemoriaPalavraRepository;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaFactory;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaFactoryImpl;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaRepository;
-import br.edu.iff.bancodepalavras.dominio.tema.embdr.BDRTemaRepository;
-import br.edu.iff.bancodepalavras.dominio.tema.emmemoria.MemoriaTemaRepository;
 import br.edu.iff.jogoforca.dominio.boneco.BonecoFactory;
 import br.edu.iff.jogoforca.dominio.boneco.imagem.BonecoImagemFactory;
 import br.edu.iff.jogoforca.dominio.boneco.texto.BonecoTextoFactory;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorFactory;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorFactoryImpl;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorRepository;
-import br.edu.iff.jogoforca.dominio.jogador.embdr.BDRJogadorRepository;
-import br.edu.iff.jogoforca.dominio.jogador.emmemoria.MemoriaJogadorRepository;
 import br.edu.iff.jogoforca.dominio.rodada.Rodada;
 import br.edu.iff.jogoforca.dominio.rodada.RodadaAppService;
 import br.edu.iff.jogoforca.dominio.rodada.RodadaFactory;
@@ -32,8 +26,6 @@ import br.edu.iff.jogoforca.embdr.BDRRepositoryFactory;
 import br.edu.iff.jogoforca.emmemoria.MemoriaRepositoryFactory;
 import br.edu.iff.jogoforca.imagem.ElementoGraficoImagemFactory;
 import br.edu.iff.jogoforca.texto.ElementoGraficoTextoFactory;
-import br.edu.iff.jogoforca.dominio.rodada.emmemoria.MemoriaRodadaRepository;
-import br.edu.iff.jogoforca.dominio.rodada.embdr.BDRRodadaRepository;
 
 public class Aplicacao {
   private static final String[] TIPOS_REPOSITORY_FACTORY = new String[] { "memoria", "relacional" };
@@ -56,48 +48,14 @@ public class Aplicacao {
   }
 
   public void configurar() {
-    RodadaFactory rodadaFactory = null;
-    RodadaRepository rodadaRepository = null;
-    JogadorRepository jogadorRepository = null;
-    TemaRepository temaRepository = null;
-    PalavraRepository palavraRepository = null;
-    LetraFactory letraFactory = null;
-    BonecoFactory bonecoFactory = null;
-    PalavraFactory palavraFactory = PalavraFactoryImpl.getSoleInstance();
-
-    switch (tipoRepositoryFactory) {
-      case "memoria":
-        rodadaRepository = MemoriaRodadaRepository.getSoleInstance();
-        jogadorRepository = MemoriaJogadorRepository.getSoleInstance();
-        temaRepository = MemoriaTemaRepository.getSoleInstance();
-        palavraRepository = MemoriaPalavraRepository.getSoleInstance();
-        break;
-
-      case "relacional":
-        rodadaRepository = BDRRodadaRepository.getSoleInstance();
-        jogadorRepository = BDRJogadorRepository.getSoleInstance();
-        temaRepository = BDRTemaRepository.getSoleInstance();
-        palavraRepository = BDRPalavraRepository.getSoleInstance();
-        break;
-    }
-
-    switch (tipoRodadaFactory) {
-      case "sorteio":
-        rodadaFactory = RodadaSorteioFactory.createSoleInstance(rodadaRepository, temaRepository, palavraRepository);
-        break;
-    }
-
-    switch (tipoElementoGraficoFactory) {
-      case "texto":
-        letraFactory = LetraTextoFactory.getSoleInstance();
-        bonecoFactory = BonecoTextoFactory.getSoleInstance();
-        break;
-
-      case "imagem":
-        letraFactory = LetraImagemFactory.getSoleInstance();
-        bonecoFactory = BonecoImagemFactory.getSoleInstance();
-        break;
-    }
+    RodadaFactory rodadaFactory = this.getRodadaFactory();
+    RodadaRepository rodadaRepository = this.getRepositoryFactory().getRodadaRepository();
+    JogadorRepository jogadorRepository = this.getRepositoryFactory().getJogadorRepository();
+    TemaRepository temaRepository = this.getRepositoryFactory().getTemaRepository();
+    PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
+    LetraFactory letraFactory = this.getLetraFactory();
+    BonecoFactory bonecoFactory = this.getBonecoFactory();
+    PalavraFactory palavraFactory = this.getPalavraFactory();
 
     RodadaAppService.createSoleInstance(rodadaFactory, rodadaRepository, jogadorRepository);
     JogadorFactoryImpl.createSoleInstance(jogadorRepository);
@@ -194,27 +152,16 @@ public class Aplicacao {
 
   public RodadaFactory getRodadaFactory() {
     RodadaFactory rodadaFactory = null;
-    RodadaRepository rodadaRepository = null;
-    TemaRepository temaRepository = null;
-    PalavraRepository palavraRepository = null;
-
-    switch (tipoRepositoryFactory) {
-      case "memoria":
-        rodadaRepository = MemoriaRodadaRepository.getSoleInstance();
-        temaRepository = MemoriaTemaRepository.getSoleInstance();
-        palavraRepository = MemoriaPalavraRepository.getSoleInstance();
-        break;
-
-      case "relacional":
-        rodadaRepository = BDRRodadaRepository.getSoleInstance();
-        temaRepository = BDRTemaRepository.getSoleInstance();
-        palavraRepository = BDRPalavraRepository.getSoleInstance();
-        break;
-    }
+    RodadaRepository rodadaRepository = this.getRepositoryFactory().getRodadaRepository();
+    TemaRepository temaRepository = this.getRepositoryFactory().getTemaRepository();
+    PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
 
     switch (tipoRodadaFactory) {
       case "sorteio":
-        rodadaFactory = RodadaSorteioFactory.createSoleInstance(rodadaRepository, temaRepository, palavraRepository);
+        rodadaFactory = RodadaSorteioFactory.getSoleInstance();
+        if (rodadaFactory == null) {
+          rodadaFactory = RodadaSorteioFactory.createSoleInstance(rodadaRepository, temaRepository, palavraRepository);
+        }
         break;
     }
     return rodadaFactory;

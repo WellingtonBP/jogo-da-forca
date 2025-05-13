@@ -19,14 +19,17 @@ public class ElementoGraficoTextoFactory implements ElementoGraficoFactory {
     return ElementoGraficoTextoFactory.soleInstance;
   }
 
+  @Override
   public Boneco getBoneco() {
     return BonecoTextoFactory.getSoleInstance().getBoneco();
   }
 
+  @Override
   public Letra getLetra(char codigo) {
     return LetraTextoFactory.getSoleInstance().getLetra(codigo);
   }
 
+  @Override
   public Letra getLetraEncoberta() {
     return LetraTextoFactory.getSoleInstance().getLetraEncoberta();
   }
