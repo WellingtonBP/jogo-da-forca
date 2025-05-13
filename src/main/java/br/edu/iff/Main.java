@@ -52,6 +52,23 @@ public class Main {
                 rodada.exibirItens(op2);
                 break;
 
+              case "Exibir boneco":
+                rodada.exibirBoneco(null);
+                break;
+
+              case "Tentar":
+                System.out.println("Digite o caracter: ");
+                String tentativa = input.nextLine();
+                rodada.tentar(tentativa.charAt(0));
+                break;
+
+              case "Arriscar":
+                System.out.println("Digite a palavra: ");
+                String arriscada = input.nextLine();
+
+                rodada.arriscar(new String[] { arriscada });
+                break;
+
               case "Finalizar":
                 System.out.println("Fim partida");
                 break;
