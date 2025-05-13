@@ -48,21 +48,23 @@ public class Aplicacao {
   }
 
   public void configurar() {
+    LetraFactory letraFactory = this.getLetraFactory();
+    BonecoFactory bonecoFactory = this.getBonecoFactory();
+
+    Rodada.setBonecoFactory(bonecoFactory);
+    Palavra.setLetraFactory(letraFactory);
+
     RodadaFactory rodadaFactory = this.getRodadaFactory();
     RodadaRepository rodadaRepository = this.getRepositoryFactory().getRodadaRepository();
     JogadorRepository jogadorRepository = this.getRepositoryFactory().getJogadorRepository();
     TemaRepository temaRepository = this.getRepositoryFactory().getTemaRepository();
     PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
-    LetraFactory letraFactory = this.getLetraFactory();
-    BonecoFactory bonecoFactory = this.getBonecoFactory();
     PalavraFactory palavraFactory = this.getPalavraFactory();
 
     RodadaAppService.createSoleInstance(rodadaFactory, rodadaRepository, jogadorRepository);
     JogadorFactoryImpl.createSoleInstance(jogadorRepository);
     PalavraFactoryImpl.createSoleInstance(palavraRepository);
     TemaFactoryImpl.createSoleInstance(temaRepository);
-    Rodada.setBonecoFactory(bonecoFactory);
-    Palavra.setLetraFactory(letraFactory);
     PalavraAppService.createSoleInstance(temaRepository, palavraRepository, palavraFactory);
     RodadaAppService.createSoleInstance(rodadaFactory, rodadaRepository, jogadorRepository);
   }
