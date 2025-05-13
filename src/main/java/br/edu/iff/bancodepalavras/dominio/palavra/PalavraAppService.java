@@ -36,7 +36,10 @@ public class PalavraAppService {
       if (palavraObj != null) {
         return true;
       }
-      var novaPalavra = Palavra.criar(this.palavraRepository.getProximoId(), palavra, tema);
+      var novaPalavra = this.palavraFactory.getPalavra(palavra, tema);
+      if (novaPalavra == null) {
+        return false;
+      }
       this.palavraRepository.inserir(novaPalavra);
       return true;
     } catch (RepositoryException e) {
