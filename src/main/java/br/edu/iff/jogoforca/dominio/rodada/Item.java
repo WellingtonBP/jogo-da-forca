@@ -35,7 +35,8 @@ public class Item extends ObjetoDominioImpl {
     }
 
     public Letra[] getLetrasDescobertas() {
-        Letra[] letrasDescobertas = new Letra[this.posicoesDescobertas.length];
+        Letra[] letrasDescobertas = new Letra[this.palavra.getTamanho() - this.qtdeLetrasEncobertas()];
+
         int j = 0;
         for (int i = 0; i < this.palavra.getTamanho(); i++) {
             if (this.posicoesDescobertas[i]) {
@@ -77,7 +78,7 @@ public class Item extends ObjetoDominioImpl {
     }
 
     public void exibir(Object contexto) {
-        this.palavra.exibir(contexto);
+        this.palavra.exibir(contexto, this.posicoesDescobertas);
     }
 
     boolean tentar(char codigo) {
@@ -91,7 +92,7 @@ public class Item extends ObjetoDominioImpl {
 
     void arriscar(String palavra) {
         this.palavraArriscada = palavra;
-        if (!this.palavra.comparar(palavra)) {
+        if (this.palavra.comparar(palavra)) {
             for (int i = 0; i < palavra.toCharArray().length; i++) {
                 this.tentar(palavra.charAt(i));
             }

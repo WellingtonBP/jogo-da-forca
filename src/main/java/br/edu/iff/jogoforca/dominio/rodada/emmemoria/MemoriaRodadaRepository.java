@@ -42,17 +42,24 @@ public class MemoriaRodadaRepository implements RodadaRepository {
 
   @Override
   public void inserir(Rodada rodada) throws RepositoryException {
+    if (this.getPorId(rodada.getId()) != null)
+      throw new RepositoryException();
+
     map.put(this.getProximoId(), rodada);
     this.sequence++;
   }
 
   @Override
   public void atualizar(Rodada rodada) throws RepositoryException {
+    if (this.getPorId(rodada.getId()) == null)
+      throw new RepositoryException();
     map.put(rodada.getId(), rodada);
   }
 
   @Override
   public void remover(Rodada rodada) throws RepositoryException {
+    if (this.getPorId(rodada.getId()) == null)
+      throw new RepositoryException();
     map.remove(rodada.getId());
   }
 

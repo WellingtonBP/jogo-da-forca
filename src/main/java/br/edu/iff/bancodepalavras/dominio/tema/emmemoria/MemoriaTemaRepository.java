@@ -45,18 +45,26 @@ public class MemoriaTemaRepository implements TemaRepository {
   }
 
   @Override
-  public void inserir(Tema tema) {
+  public void inserir(Tema tema) throws RepositoryException {
+    var existente = this.getPorNome(tema.getNome());
+    if (existente != null) {
+      throw new RepositoryException();
+    }
     map.put(this.getProximoId(), tema);
     this.sequence++;
   }
 
   @Override
   public void atualizar(Tema tema) throws RepositoryException {
+    if (this.getPorId(tema.getId()) == null)
+      throw new RepositoryException();
     map.put(tema.getId(), tema);
   }
 
   @Override
   public void remover(Tema tema) throws RepositoryException {
+    if (this.getPorId(tema.getId()) == null)
+      throw new RepositoryException();
     map.remove(tema.getId());
   }
 

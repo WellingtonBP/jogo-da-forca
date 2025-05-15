@@ -37,10 +37,7 @@ public class PalavraAppService {
         return true;
       }
       var novaPalavra = this.palavraFactory.getPalavra(palavra, tema);
-      if (novaPalavra == null) {
-        return false;
-      }
-      this.palavraRepository.atualizar(novaPalavra);
+      this.palavraRepository.inserir(novaPalavra);
       return true;
     } catch (RepositoryException e) {
       return false;

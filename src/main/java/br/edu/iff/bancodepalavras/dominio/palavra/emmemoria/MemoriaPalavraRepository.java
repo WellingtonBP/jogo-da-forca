@@ -1,9 +1,11 @@
 package br.edu.iff.bancodepalavras.dominio.palavra.emmemoria;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import br.edu.iff.bancodepalavras.dominio.palavra.Palavra;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraRepository;
@@ -62,17 +64,30 @@ public class MemoriaPalavraRepository implements PalavraRepository {
 
   @Override
   public void inserir(Palavra palavra) throws RepositoryException {
+    var existente = this.getPalavra(
+        Arrays.asList(palavra.getLetras()).stream().map(letra -> String.valueOf(letra.getCodigo()))
+            .collect(Collectors.joining("")));
+    if (existente != null)
+      throw new RepositoryException();
     map.put(this.getProximoId(), palavra);
     this.sequence++;
   }
 
   @Override
   public void atualizar(Palavra palavra) throws RepositoryException {
+    var existente = map.get(palavra.getId());
+    if (existente == null) {
+      throw new RepositoryException();
+    }
     map.put(palavra.getId(), palavra);
   }
 
   @Override
   public void remover(Palavra palavra) throws RepositoryException {
+    var existente = map.get(palavra.getId());
+    if (existente == null) {
+      throw new RepositoryException();
+    }
     map.remove(palavra.getId());
   }
 

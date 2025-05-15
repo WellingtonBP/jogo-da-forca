@@ -4,11 +4,9 @@ import br.edu.iff.factory.EntityFactory;
 
 public class TemaFactoryImpl extends EntityFactory implements TemaFactory {
   private static TemaFactoryImpl soleInstance;
-  private TemaRepository temaRepository;
 
   private TemaFactoryImpl(TemaRepository temaRepository) {
     super(temaRepository);
-    this.temaRepository = temaRepository;
   }
 
   public static TemaFactoryImpl createSoleInstance(TemaRepository temaRepository) {
@@ -22,13 +20,6 @@ public class TemaFactoryImpl extends EntityFactory implements TemaFactory {
 
   @Override
   public Tema getTema(String nome) {
-    var existente = this.temaRepository.getPorNome(nome);
-    if (existente != null) {
-      return existente;
-    }
-    var novoTema = Tema.criar(getProximoId(), nome);
-    this.temaRepository.inserir(novoTema);
-    return novoTema;
+    return Tema.criar(getProximoId(), nome);
   }
-
 }

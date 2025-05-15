@@ -32,6 +32,7 @@ public class Rodada extends ObjetoDominioImpl {
         this.items = new Item[this.palavras.length];
         this.tema = this.palavras.length != 0 ? this.palavras[0].getTema() : null;
         for (int i = 0; i < this.palavras.length; i++) {
+            System.out.println("AQUII");
             this.items[i] = Item.criar((long) i, this.palavras[i]);
         }
     }
@@ -125,28 +126,24 @@ public class Rodada extends ObjetoDominioImpl {
             }
         }
 
-        if (achou) {
-            int letraCertaPos = 0;
-            if (this.certas == null) {
-                this.certas = new Letra[1];
-            } else {
-                Letra[] novo = new Letra[this.certas.length + 1];
-                letraCertaPos = this.certas.length;
-                System.arraycopy(this.certas, 0, novo, 0, this.certas.length);
-                this.certas = novo;
-            }
-            this.certas[letraCertaPos] = Palavra.getLetraFactory().getLetra(codigo);
+        Letra[] array = achou ? this.certas : this.erradas;
+        int pos = 0;
+
+        if (array == null) {
+            array = new Letra[1];
         } else {
-            int letraErradaPos = 0;
-            if (this.erradas == null) {
-                this.erradas = new Letra[1];
-            } else {
-                Letra[] novo = new Letra[this.erradas.length];
-                letraErradaPos = this.erradas.length;
-                System.arraycopy(this.erradas, 0, novo, 0, this.erradas.length);
-                this.erradas = novo;
-            }
-            this.erradas[letraErradaPos] = Palavra.getLetraFactory().getLetra(codigo);
+            Letra[] novo = new Letra[array.length + 1];
+            pos = array.length;
+            System.arraycopy(array, 0, novo, 0, array.length);
+            array = novo;
+        }
+
+        array[pos] = Palavra.getLetraFactory().getLetra(codigo);
+
+        if (achou) {
+            this.certas = array;
+        } else {
+            this.erradas = array;
         }
     }
 
@@ -176,6 +173,8 @@ public class Rodada extends ObjetoDominioImpl {
     }
 
     public void exibirLetrasErradas(Object contexto) {
+        if (this.erradas == null)
+            return;
         for (var letraErrada : this.erradas) {
             letraErrada.exibir(contexto);
         }
@@ -245,11 +244,11 @@ public class Rodada extends ObjetoDominioImpl {
     }
 
     public int getQtdeTentativasRestantes() {
-        return Rodada.maxErros - this.erradas.length;
+        return Rodada.maxErros - (this.erradas != null ? this.erradas.length : 0);
     }
 
     public int getQtdeErros() {
-        return this.erradas.length;
+        return this.erradas != null ? this.erradas.length : 0;
     }
 
     public int getQtdeAcertos() {

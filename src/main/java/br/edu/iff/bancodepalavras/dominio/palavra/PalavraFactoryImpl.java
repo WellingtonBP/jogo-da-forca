@@ -2,16 +2,12 @@ package br.edu.iff.bancodepalavras.dominio.palavra;
 
 import br.edu.iff.bancodepalavras.dominio.tema.Tema;
 import br.edu.iff.factory.EntityFactory;
-import br.edu.iff.repository.RepositoryException;
 
 public class PalavraFactoryImpl extends EntityFactory implements PalavraFactory {
   private static PalavraFactoryImpl soleInstance;
 
-  private PalavraRepository palavraRepository;
-
-  private PalavraFactoryImpl(PalavraRepository PalavraRepository) {
-    super(PalavraRepository);
-    this.palavraRepository = PalavraRepository;
+  private PalavraFactoryImpl(PalavraRepository palavraRepository) {
+    super(palavraRepository);
   }
 
   public static PalavraFactoryImpl createSoleInstance(PalavraRepository palavraRepository) {
@@ -25,17 +21,7 @@ public class PalavraFactoryImpl extends EntityFactory implements PalavraFactory 
 
   @Override
   public Palavra getPalavra(String palavra, Tema tema) {
-    try {
-      var existente = this.palavraRepository.getPalavra(palavra);
-      if (existente != null) {
-        return existente;
-      }
-      var novaPalavra = Palavra.criar(getProximoId(), palavra, tema);
-      this.palavraRepository.inserir(novaPalavra);
-      return novaPalavra;
-    } catch (RepositoryException e) {
-      return null;
-    }
+    return Palavra.criar(getProximoId(), palavra, tema);
   }
 
 }

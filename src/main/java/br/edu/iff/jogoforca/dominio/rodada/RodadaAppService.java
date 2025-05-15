@@ -29,6 +29,8 @@ public class RodadaAppService {
 
   public Rodada novaRodada(long idJogador) {
     var jogador = this.jogadorRepository.getPorId(idJogador);
+    if (jogador == null)
+      return null;
     var rodada = this.rodadaFactory.getRodada(jogador);
     return rodada;
   }

@@ -1,8 +1,6 @@
 package br.edu.iff.jogoforca;
 
 import br.edu.iff.bancodepalavras.dominio.letra.LetraFactory;
-import br.edu.iff.bancodepalavras.dominio.letra.imagem.LetraImagemFactory;
-import br.edu.iff.bancodepalavras.dominio.letra.texto.LetraTextoFactory;
 import br.edu.iff.bancodepalavras.dominio.palavra.Palavra;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraAppService;
 import br.edu.iff.bancodepalavras.dominio.palavra.PalavraFactory;
@@ -12,8 +10,6 @@ import br.edu.iff.bancodepalavras.dominio.tema.TemaFactory;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaFactoryImpl;
 import br.edu.iff.bancodepalavras.dominio.tema.TemaRepository;
 import br.edu.iff.jogoforca.dominio.boneco.BonecoFactory;
-import br.edu.iff.jogoforca.dominio.boneco.imagem.BonecoImagemFactory;
-import br.edu.iff.jogoforca.dominio.boneco.texto.BonecoTextoFactory;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorFactory;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorFactoryImpl;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorRepository;
@@ -54,19 +50,22 @@ public class Aplicacao {
     Rodada.setBonecoFactory(bonecoFactory);
     Palavra.setLetraFactory(letraFactory);
 
-    RodadaFactory rodadaFactory = this.getRodadaFactory();
+    PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
     RodadaRepository rodadaRepository = this.getRepositoryFactory().getRodadaRepository();
     JogadorRepository jogadorRepository = this.getRepositoryFactory().getJogadorRepository();
     TemaRepository temaRepository = this.getRepositoryFactory().getTemaRepository();
-    PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
-    PalavraFactory palavraFactory = this.getPalavraFactory();
 
-    RodadaAppService.createSoleInstance(rodadaFactory, rodadaRepository, jogadorRepository);
-    JogadorFactoryImpl.createSoleInstance(jogadorRepository);
+    RodadaSorteioFactory.createSoleInstance(rodadaRepository, temaRepository, palavraRepository);
     PalavraFactoryImpl.createSoleInstance(palavraRepository);
     TemaFactoryImpl.createSoleInstance(temaRepository);
-    PalavraAppService.createSoleInstance(temaRepository, palavraRepository, palavraFactory);
+    PalavraFactoryImpl.createSoleInstance(palavraRepository);
+    JogadorFactoryImpl.createSoleInstance(jogadorRepository);
+
+    PalavraFactory palavraFactory = this.getPalavraFactory();
+    RodadaFactory rodadaFactory = this.getRodadaFactory();
+
     RodadaAppService.createSoleInstance(rodadaFactory, rodadaRepository, jogadorRepository);
+    PalavraAppService.createSoleInstance(temaRepository, palavraRepository, palavraFactory);
   }
 
   public String[] getTiposRepositoryFactory() {
@@ -101,7 +100,7 @@ public class Aplicacao {
     this.configurar();
   }
 
-  public ElementoGraficoFactory getElementoGraficoFactory() {
+  private ElementoGraficoFactory getElementoGraficoFactory() {
     ElementoGraficoFactory elementoGraficoFactory = null;
     switch (tipoElementoGraficoFactory) {
       case "texto":
@@ -116,31 +115,11 @@ public class Aplicacao {
   }
 
   public BonecoFactory getBonecoFactory() {
-    BonecoFactory bonecoFactory = null;
-    switch (tipoElementoGraficoFactory) {
-      case "texto":
-        bonecoFactory = BonecoTextoFactory.getSoleInstance();
-        break;
-
-      case "imagem":
-        bonecoFactory = BonecoImagemFactory.getSoleInstance();
-        break;
-    }
-    return bonecoFactory;
+    return this.getElementoGraficoFactory();
   }
 
   public LetraFactory getLetraFactory() {
-    LetraFactory letraFactory = null;
-    switch (tipoElementoGraficoFactory) {
-      case "texto":
-        letraFactory = LetraTextoFactory.getSoleInstance();
-        break;
-
-      case "imagem":
-        letraFactory = LetraImagemFactory.getSoleInstance();
-        break;
-    }
-    return letraFactory;
+    return this.getElementoGraficoFactory();
   }
 
   public String[] getTiposRodadaFactory() {
@@ -154,16 +133,10 @@ public class Aplicacao {
 
   public RodadaFactory getRodadaFactory() {
     RodadaFactory rodadaFactory = null;
-    RodadaRepository rodadaRepository = this.getRepositoryFactory().getRodadaRepository();
-    TemaRepository temaRepository = this.getRepositoryFactory().getTemaRepository();
-    PalavraRepository palavraRepository = this.getRepositoryFactory().getPalavraRepository();
 
     switch (tipoRodadaFactory) {
       case "sorteio":
         rodadaFactory = RodadaSorteioFactory.getSoleInstance();
-        if (rodadaFactory == null) {
-          rodadaFactory = RodadaSorteioFactory.createSoleInstance(rodadaRepository, temaRepository, palavraRepository);
-        }
         break;
     }
     return rodadaFactory;

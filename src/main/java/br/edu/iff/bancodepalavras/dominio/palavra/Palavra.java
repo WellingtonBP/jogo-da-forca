@@ -14,18 +14,19 @@ public class Palavra extends ObjetoDominioImpl {
     private static LetraFactory letraFactory;
     private Letra[] letras;
     private String palavra;
-    private Letra[] descobertas;
 
     private Palavra(long id, String palavra, Tema tema) {
         super(id);
         this.tema = tema;
+
         this.letras = new Letra[palavra.length()];
-        this.descobertas = new Letra[palavra.length()];
+
         var charArr = palavra.toCharArray();
+
         for (int i = 0; i < charArr.length; i++) {
-            this.letras[i] = Palavra.letraFactory.getLetraEncoberta();
-            this.descobertas[i] = Palavra.letraFactory.getLetra(charArr[i]);
+            this.letras[i] = Palavra.letraFactory.getLetra(charArr[i]);
         }
+
         this.palavra = palavra;
     }
 
@@ -33,7 +34,7 @@ public class Palavra extends ObjetoDominioImpl {
         if (Palavra.letraFactory == null) {
             return null;
         }
-        ;
+
         return new Palavra(id, palavra, tema);
     }
 
@@ -41,7 +42,7 @@ public class Palavra extends ObjetoDominioImpl {
         if (Palavra.letraFactory == null) {
             return null;
         }
-        ;
+
         return new Palavra(id, palavra, tema);
     }
 
@@ -71,6 +72,8 @@ public class Palavra extends ObjetoDominioImpl {
         for (int i = 0; i < this.letras.length; i++) {
             if (posicoes[i]) {
                 this.letras[i].exibir(contexto);
+            } else {
+                letraFactory.getLetraEncoberta().exibir(null);
             }
         }
     }
@@ -78,12 +81,13 @@ public class Palavra extends ObjetoDominioImpl {
     public int[] tentar(char codigo) {
         List<Integer> pos = new ArrayList<>();
         Letra t = Palavra.letraFactory.getLetra(codigo);
+
         for (int i = 0; i < this.letras.length; i++) {
-            if (this.descobertas[i].equals(t)) {
-                this.letras[i] = this.descobertas[i];
+            if (this.letras[i].equals(t)) {
                 pos.add(i);
             }
         }
+
         return pos.stream().mapToInt(Integer::intValue).toArray();
     }
 

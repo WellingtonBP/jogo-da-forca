@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.edu.iff.jogoforca.dominio.jogador.Jogador;
 import br.edu.iff.jogoforca.dominio.jogador.JogadorRepository;
+import br.edu.iff.repository.RepositoryException;
 
 public class MemoriaJogadorRepository implements JogadorRepository {
   private static MemoriaJogadorRepository soleInstance;
@@ -39,18 +40,25 @@ public class MemoriaJogadorRepository implements JogadorRepository {
   }
 
   @Override
-  public void inserir(Jogador jogador) {
+  public void inserir(Jogador jogador) throws RepositoryException {
+    if (this.getPorId(jogador.getId()) != null)
+      throw new RepositoryException();
+
     map.put(this.getProximoId(), jogador);
     this.sequence++;
   }
 
   @Override
-  public void atualizar(Jogador jogador) {
+  public void atualizar(Jogador jogador) throws RepositoryException {
+    if (this.getPorId(jogador.getId()) == null)
+      throw new RepositoryException();
     map.put(jogador.getId(), jogador);
   }
 
   @Override
-  public void remover(Jogador jogador) {
+  public void remover(Jogador jogador) throws RepositoryException {
+    if (this.getPorId(jogador.getId()) == null)
+      throw new RepositoryException();
     map.remove(jogador.getId());
   }
 

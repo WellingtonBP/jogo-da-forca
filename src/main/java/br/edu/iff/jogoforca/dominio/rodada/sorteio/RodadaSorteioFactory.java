@@ -12,7 +12,6 @@ import br.edu.iff.jogoforca.dominio.rodada.Rodada;
 import br.edu.iff.jogoforca.dominio.rodada.RodadaFactory;
 import br.edu.iff.jogoforca.dominio.rodada.RodadaFactoryImpl;
 import br.edu.iff.jogoforca.dominio.rodada.RodadaRepository;
-import br.edu.iff.repository.RepositoryException;
 
 public class RodadaSorteioFactory extends RodadaFactoryImpl implements RodadaFactory {
   private static RodadaSorteioFactory soleInstance;
@@ -33,43 +32,36 @@ public class RodadaSorteioFactory extends RodadaFactoryImpl implements RodadaFac
   }
 
   public Rodada getRodada(Jogador jogador) {
-    try {
-      var existente = this.getRodadaRepository().getPorJogador(jogador);
-      if (existente != null) {
-        return existente;
-      }
-
-      var temas = this.getTemaRepository().getTodos();
-      if (temas.length != 0) {
-        var randomIndexTema = ThreadLocalRandom.current().nextInt(temas.length);
-        var sortedTema = temas[randomIndexTema];
-        var palavrasTema = this.getPalavraRepository().getPorTema(sortedTema);
-
-        var qtdPalavras = ThreadLocalRandom.current().nextInt(Rodada.getMaxPalavras());
-        if (qtdPalavras == 0) {
-          qtdPalavras++;
-        }
-        if (palavrasTema.length > qtdPalavras) {
-          Set<Integer> sortedPalavras = new HashSet<>();
-          var palavrasSorteadas = new Palavra[qtdPalavras];
-          int j = 0;
-          for (int i = 0; i < qtdPalavras; i++) {
-            Integer sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
-            while (sortedPalavras.contains(sorted)) {
-              sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
-            }
-            palavrasSorteadas[j] = palavrasTema[sorted];
-            j++;
-          }
-          palavrasTema = palavrasSorteadas;
-        }
-        var rodada = Rodada.criar(getProximoId(), palavrasTema, jogador);
-        this.getRodadaRepository().inserir(rodada);
-        return rodada;
-      }
-      return null;
-    } catch (RepositoryException e) {
-      return null;
+    var existente = this.getRodadaRepository().getPorJogador(jogador);
+    if (existente != null) {
+      return existente;
     }
+
+    var temas = this.getTemaRepository().getTodos();
+    if (temas.length != 0) {
+      var randomIndexTema = ThreadLocalRandom.current().nextInt(temas.length);
+      var sortedTema = temas[randomIndexTema];
+      var palavrasTema = this.getPalavraRepository().getPorTema(sortedTema);
+
+      var qtdPalavras = ThreadLocalRandom.current().nextInt(Rodada.getMaxPalavras());
+      if (qtdPalavras == 0) {
+        qtdPalavras++;
+      }
+      Set<Integer> sortedPalavras = new HashSet<>();
+      var palavrasSorteadas = new Palavra[qtdPalavras];
+      int j = 0;
+      for (int i = 0; i < qtdPalavras; i++) {
+        Integer sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
+        while (sortedPalavras.contains(sorted)) {
+          sorted = ThreadLocalRandom.current().nextInt(palavrasTema.length);
+        }
+        palavrasSorteadas[j] = palavrasTema[sorted];
+        j++;
+      }
+      palavrasTema = palavrasSorteadas;
+      var rodada = Rodada.criar(getProximoId(), palavrasTema, jogador);
+      return rodada;
+    }
+    return null;
   }
 }

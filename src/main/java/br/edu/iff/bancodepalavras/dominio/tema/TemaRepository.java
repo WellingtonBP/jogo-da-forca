@@ -10,7 +10,7 @@ public interface TemaRepository extends Repository {
 
   public Tema[] getTodos();
 
-  public void inserir(Tema tema);
+  public void inserir(Tema tema) throws RepositoryException;
 
   public void atualizar(Tema tema) throws RepositoryException;
 
